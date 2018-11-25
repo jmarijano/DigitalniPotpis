@@ -8,7 +8,7 @@ namespace FileProcessors
     public interface IFileProcessor
     {
 
-        void Close();
+        
         string ReadAll();
         bool Write(string Line);
 
@@ -17,5 +17,6 @@ namespace FileProcessors
         void Create();
 
         string GetPath();
+        bool Exists();
     }
 }

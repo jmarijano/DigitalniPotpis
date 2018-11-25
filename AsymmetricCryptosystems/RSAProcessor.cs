@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 
 namespace AsymmetricCryptosystems
 {
-    public class RSAProcessor
+    public class RSAProcessor : IAsymmetricCryptosystem
     {
         private readonly RSACryptoServiceProvider _csp;
         private readonly RSAParameters _privateKey;
@@ -14,7 +14,7 @@ namespace AsymmetricCryptosystems
         private readonly string _privateKeyString;
 
         public RSAProcessor()
-            : this(new RSACryptoServiceProvider())
+            : this(new RSACryptoServiceProvider(2048))
         {
 
         }

@@ -14,7 +14,7 @@ namespace FileProcessors
         private readonly string _fileName;
         public TextFileProcessor(string fileName)
         {
-            _fileName = fileName;
+            _fileName = fileName + ".txt";
         }
         public void Close()
         {
@@ -28,16 +28,17 @@ namespace FileProcessors
                 throw new FileNotFoundException($"Datoteka {_fileName} nije pronađena!");
             }
 
-            List<TextFileLine> listOfLines = new List<TextFileLine>();
-
 
             if (new FileInfo(GetPath()).Length == 0)
             {
-                throw new ArgumentException($"Datoteka {_fileName} je prazna!" );
+                throw new ArgumentException($"Datoteka {_fileName} je prazna!");
+            }
+            string lines = null;
+            using (_file)
+            {
+                lines = File.ReadAllLines(GetPath()).ToString();
             }
 
-
-            string lines = File.ReadAllLines(GetPath()).ToString();
             return lines;
         }
 
@@ -49,7 +50,7 @@ namespace FileProcessors
             }
             Clear();
             File.WriteAllText(GetPath(), lines + Environment.NewLine);
-            
+
             return true;
         }
 
@@ -57,24 +58,36 @@ namespace FileProcessors
 
         public string GetPath()
         {
-            return AppDomain.CurrentDomain.BaseDirectory + _fileName + ".txt";
+            return AppDomain.CurrentDomain.BaseDirectory + _fileName;
         }
 
         public bool Clear()
         {
-            File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + _fileName, String.Empty);
+            using (_file)
+            {
+                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + _fileName, String.Empty);
+            }
+            
             return true;
         }
 
         public void Create()
         {
-            if (!IsCreated())
+            using (_file = File.Create(GetPath()))
             {
-                File.Create(GetPath());
-            }
-            
-        }
 
+            }
+
+
+        }
+        public bool Exists()
+        {
+            if (IsCreated())
+            {
+                return true;
+            }
+            return false;
+        }
         public bool IsCreated()
         {
             if (File.Exists(GetPath()))
@@ -86,9 +99,11 @@ namespace FileProcessors
     }
     public enum FileName
     {
-        dekriptirani_tekst,
+        dekriptirani_tekst_asimetricno,
+        dekriptirani_tekst_simetricno,
         javni_kljuc,
-        kriptirani_tekst,
+        kriptirani_tekst_asimetricno,
+        kriptirani_tekst_simetricno,
         potpis,
         privatni_kljuc,
         sazetak,
