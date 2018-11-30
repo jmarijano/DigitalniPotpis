@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Security.Cryptography;
+using HashFunctions;
 
 namespace AsymmetricCryptosystems
 {
@@ -59,6 +60,36 @@ namespace AsymmetricCryptosystems
 
             string output = System.Text.Encoding.Unicode.GetString(bytesPlainText);
             return output;
+            
+        }
+
+        public string SignHash(string message,string hashFunctionName)
+        {
+            byte[] output;
+            
+                RSAPKCS1SignatureFormatter signatureFormatter = new RSAPKCS1SignatureFormatter();
+                signatureFormatter.SetKey(_csp);
+                signatureFormatter.SetHashAlgorithm(hashFunctionName);
+                byte[] originalData = Convert.FromBase64String(message);
+                
+                output = signatureFormatter.CreateSignature(originalData);
+            
+            return Convert.ToBase64String(output);
+        }
+        public bool VerifyHash(string signedHash, string hashFunctionName,string hash)
+        {
+            
+                RSAPKCS1SignatureDeformatter signatureDeformatter = new RSAPKCS1SignatureDeformatter(_csp);
+                signatureDeformatter.SetHashAlgorithm(hashFunctionName);
+                byte[] originalSignedHash = Convert.FromBase64String(signedHash);
+                byte[] originalHash = Convert.FromBase64String(hash);
+                //bool output = signatureDeformatter.VerifySignature(originalHash, originalSignedHash);
+                
+                bool output =_csp.VerifyHash(originalHash,CryptoConfig.MapNameToOID(hashFunctionName), originalSignedHash);
+                return output;
+            
+           
+            
         }
     }
 }

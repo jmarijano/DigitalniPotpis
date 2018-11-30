@@ -10,5 +10,9 @@ namespace AsymmetricCryptosystems
         string Decrypt(string cypherText);
         string PublicKeyToString();
         string PrivateKeyToString();
+
+        string SignHash(string hash, string hashFunctionName);
+
+        bool VerifyHash(string signedHash, string hashFunctionName, string hash);
     }
 }

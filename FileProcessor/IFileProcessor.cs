@@ -9,7 +9,7 @@ namespace FileProcessors
     {
 
         
-        string ReadAll();
+        string Read();
         bool Write(string Line);
 
         bool Clear();
@@ -18,5 +18,7 @@ namespace FileProcessors
 
         string GetPath();
         bool Exists();
+
+        string ReadAll();
     }
 }

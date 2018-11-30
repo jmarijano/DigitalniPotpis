@@ -21,7 +21,7 @@ namespace FileProcessors
             _file.Close();
         }
 
-        public string ReadAll()
+        public string Read()
         {
             if (!IsCreated())
             {
@@ -36,7 +36,7 @@ namespace FileProcessors
             string lines = null;
             using (_file)
             {
-                lines = File.ReadAllLines(GetPath()).ToString();
+                lines = File.ReadAllLines(GetPath()).First().ToString();
             }
 
             return lines;
@@ -96,11 +96,25 @@ namespace FileProcessors
             }
             return false;
         }
+
+        public string ReadAll()
+        {
+            string[] allLines;
+            string output = "";
+            using (_file)
+            {
+               allLines= File.ReadAllLines(GetPath());
+            }
+            foreach (var line in allLines)
+            {
+                output += line + Environment.NewLine;
+            }
+            return output;
+        }
     }
     public enum FileName
     {
-        dekriptirani_tekst_asimetricno,
-        dekriptirani_tekst_simetricno,
+        dekriptirani_tekst,
         javni_kljuc,
         kriptirani_tekst_asimetricno,
         kriptirani_tekst_simetricno,
