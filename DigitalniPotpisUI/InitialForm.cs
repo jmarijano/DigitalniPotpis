@@ -29,10 +29,41 @@ namespace DigitalniPotpisUI
         IFileProcessor signature;
         IFileProcessor hash;
         IHashFunction hashFunction;
+        string hashValue;
+        string signatureValue;
 
         public InitialForm()
         {
             InitializeComponent();
+        }
+
+        private void DatotekaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<IFileProcessor> fileProcessors = FileObjectCreator.CreteListOfFileProcessors();
+            IFileManager fileManager = new StandardTextFIleManager();
+
+            if (fileManager.CheckIfAllFIlesExist(fileProcessors))
+            {
+                MessageBox.Show("Datoteke već postoje!");
+            }
+
+            else
+            {
+                fileManager.CreateTextFiles(fileProcessors);
+                MessageBox.Show("Datoteke su stvorene!");
+            }
+        }
+
+        private void KljučevaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            rsaProcessor = new RSAProcessor();
+            tripleDES = new TripleDESProcessor();
+            MessageBox.Show("Stvoreni su novi ključevi!");
+        }
+
+        private void InitialForm_Load(object sender, EventArgs e)
+        {
+            uiSaveChanges.Visible = false;
             rsaProcessor = new RSAProcessor();
             tripleDES = new TripleDESProcessor();
             hashFunction = new SHA256Processor();
@@ -46,85 +77,19 @@ namespace DigitalniPotpisUI
             hash = FileObjectCreator.CreateSazetak();
         }
 
-        private void DatotekaToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            List<IFileProcessor> fileProcessors = FileObjectCreator.CreteListOfFileProcessors();
-            IFileManager fileManager = new StandardTextFIleManager();
-
-            if (fileManager.CheckIfAllFIlesExist(fileProcessors))
-            {
-                MessageBox.Show("Datoteke već postoje!");
-            }
-           
-            else
-            {
-                fileManager.CreateTextFiles(fileProcessors);
-                MessageBox.Show("Datoteke su stvorene!");
-            }
-        }
-
-        private void KljučevaToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TextFileProcessor privateKey = new TextFileProcessor(FileName.privatni_kljuc.ToString());
-            TextFileProcessor publicKey = new TextFileProcessor(FileName.javni_kljuc.ToString());
-            TextFileProcessor secretKey = new TextFileProcessor(FileName.tajni_kljuc.ToString());
-            TextFileProcessor plainTextFile = new TextFileProcessor(FileName.dekriptirani_tekst.ToString());
-            TextFileProcessor cypherAsymmetric = new TextFileProcessor(FileName.kriptirani_tekst_asimetricno.ToString());
-            TextFileProcessor cypherSymmetric = new TextFileProcessor(FileName.kriptirani_tekst_simetricno.ToString());
-            TextFileProcessor hashedTextFile = new TextFileProcessor(FileName.sazetak.ToString());
-            IHashFunction hash = new SHA256Processor();
-            
-            hash.GetData(plainTextFile.Read());
-            string nesto1 = hash.ReturnHash();
-
-            if (privateKey.Exists() && publicKey.Exists())
-            {
-                IAsymmetricCryptosystem rSAProcessor = new RSAProcessor();
-                ISymmetricCryptosystem tripleDESProcessor = new TripleDESProcessor();
-                publicKey.Write(rSAProcessor.PublicKeyToString());
-                privateKey.Write(rSAProcessor.PrivateKeyToString());
-                secretKey.Write(tripleDESProcessor.GetKey());
-                string nesto = plainTextFile.Read();
-                cypherSymmetric.Write(tripleDESProcessor.Encrypt(plainTextFile.Read()));
-                hashedTextFile.Write(hash.ReturnHash());
-                cypherAsymmetric.Write(rSAProcessor.Encrypt(plainTextFile.Read()));
-                MessageBox.Show(tripleDESProcessor.Decrypt(cypherSymmetric.Read()));
-                MessageBox.Show(rSAProcessor.Decrypt(cypherAsymmetric.Read()));
-                MessageBox.Show(hash.ReturnHash());
-                string nesto3 = rSAProcessor.SignHash(nesto1, "SHA256");
-                MessageBox.Show(nesto3);
-                string nesto4 = rSAProcessor.SignHash(hashedTextFile.Read(), "SHA256");
-                if (rSAProcessor.VerifyHash(nesto4,"SHA256",nesto1))
-                {
-                    MessageBox.Show("radi");
-                }
-                else
-                {
-                    MessageBox.Show("neradi");
-                }
-                
-            }
-
-        }
-
-        private void InitialForm_Load(object sender, EventArgs e)
-        {
-            
-        }
-
         private void JasniTekstToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
                 ClearRichBox();
                 ShowTextBox();
-                uiShowData.Text = FileObjectCreator.CreateDekriptiraniTekst().Read();
+                uiShowData.Text = FileObjectCreator.CreateDekriptiraniTekst().ReadAll();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-            
+
         }
 
         private void SimetričnoToolStripMenuItem2_Click(object sender, EventArgs e)
@@ -133,13 +98,13 @@ namespace DigitalniPotpisUI
             {
                 ClearRichBox();
                 ShowTextBox();
-                uiShowData.Text = FileObjectCreator.CreateKriptiraniTekstSimetricno().Read();
+                uiShowData.Text = FileObjectCreator.CreateKriptiraniTekstSimetricno().ReadAll();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-            
+
         }
 
         private void AsimetričnoToolStripMenuItem2_Click(object sender, EventArgs e)
@@ -148,13 +113,13 @@ namespace DigitalniPotpisUI
             {
                 ClearRichBox();
                 ShowTextBox();
-                uiShowData.Text = FileObjectCreator.CreateKriptiraniTekstAsimetricno().Read();
+                uiShowData.Text = FileObjectCreator.CreateKriptiraniTekstAsimetricno().ReadAll();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-            
+
         }
 
         private void TajniToolStripMenuItem_Click(object sender, EventArgs e)
@@ -164,7 +129,7 @@ namespace DigitalniPotpisUI
 
                 ClearRichBox();
                 ShowTextBox();
-                uiShowData.Text = FileObjectCreator.CreateTajniKljuc().Read();
+                uiShowData.Text = FileObjectCreator.CreateTajniKljuc().ReadAll();
             }
             catch (Exception ex)
             {
@@ -208,13 +173,13 @@ namespace DigitalniPotpisUI
             {
                 ClearRichBox();
                 ShowTextBox();
-                uiShowData.Text = FileObjectCreator.CreateSazetak().Read();
+                uiShowData.Text = FileObjectCreator.CreateSazetak().ReadAll();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-            
+
         }
 
         private void DigitalniPotpisToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -223,32 +188,32 @@ namespace DigitalniPotpisUI
             {
                 ClearRichBox();
                 ShowTextBox();
-                uiShowData.Text = FileObjectCreator.CreateDigitalniPotpis().Read();
+                uiShowData.Text = FileObjectCreator.CreateDigitalniPotpis().ReadAll();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-            
+
         }
 
         private void SimetričnoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ClearRichBox();
-            if (MessageBox.Show("Simetrično kriptiranje","Simetrično kriptiraj tekst",MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show("Simetrično kriptiranje", "Simetrično kriptiraj tekst", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 try
                 {
                     secretKey.Write(tripleDES.GetKey());
-                    cyphertextSimetricno.Write(tripleDES.Encrypt(plainText.Read()));
+                    cyphertextSimetricno.Write(tripleDES.Encrypt(plainText.ReadAll()));
                     ShowTextBox();
-                    uiShowData.Text = cyphertextSimetricno.Read();
+                    uiShowData.Text = cyphertextSimetricno.ReadAll();
                 }
                 catch (Exception exception)
                 {
                     MessageBox.Show(exception.Message);
-                }   
-            } 
+                }
+            }
         }
 
         private void AsimetričnoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -260,15 +225,15 @@ namespace DigitalniPotpisUI
                 {
                     privateKey.Write(rsaProcessor.PrivateKeyToString());
                     publicKey.Write(rsaProcessor.PublicKeyToString());
-                    cypherTextAsimetricno.Write(rsaProcessor.Encrypt(plainText.Read()));
+                    cypherTextAsimetricno.Write(rsaProcessor.Encrypt(plainText.ReadAll()));
                     ShowTextBox();
-                    uiShowData.Text = cypherTextAsimetricno.Read();
+                    uiShowData.Text = cypherTextAsimetricno.ReadAll();
                 }
                 catch (Exception exc)
                 {
                     MessageBox.Show(exc.Message);
                 }
-               
+
             }
         }
 
@@ -280,15 +245,15 @@ namespace DigitalniPotpisUI
                 try
                 {
                     ShowTextBox();
-                    uiShowData.Text = "Jasni tekst: " + plainText.Read() + AddNewLine();
-                    uiShowData.Text += "Simetrično kriptiran tekst: " + cyphertextSimetricno.Read() + AddNewLine();
-                    uiShowData.Text += "Simetrično dekriptiran tekst: " + tripleDES.Decrypt(cyphertextSimetricno.Read());
+                    uiShowData.Text = "Jasni tekst: " + Environment.NewLine + plainText.ReadAll() + AddNewLine();
+                    uiShowData.Text += "Simetrično kriptiran tekst: " + cyphertextSimetricno.ReadAll() + AddNewLine();
+                    uiShowData.Text += "Simetrično dekriptiran tekst: " + Environment.NewLine + tripleDES.Decrypt(cyphertextSimetricno.ReadAll());
                 }
                 catch (Exception exception)
                 {
                     ClearRichBox();
                     MessageBox.Show(exception.Message);
-                   
+
                 }
             }
         }
@@ -301,9 +266,9 @@ namespace DigitalniPotpisUI
                 try
                 {
                     ShowTextBox();
-                    uiShowData.Text = "Jasni tekst: " + plainText.Read() + AddNewLine();
-                    uiShowData.Text += "Asimetrično kriptiran tekst: " + cypherTextAsimetricno.Read() + AddNewLine();
-                    uiShowData.Text += "Asimetrično dekriptiran tekst: " + rsaProcessor.Decrypt(cypherTextAsimetricno.Read());
+                    uiShowData.Text = "Jasni tekst: " + Environment.NewLine + plainText.ReadAll() + AddNewLine();
+                    uiShowData.Text += "Asimetrično kriptiran tekst: " + cypherTextAsimetricno.ReadAll() + AddNewLine();
+                    uiShowData.Text += "Asimetrično dekriptiran tekst: " + Environment.NewLine + rsaProcessor.Decrypt(cypherTextAsimetricno.ReadAll());
                 }
                 catch (CryptographicException exception)
                 {
@@ -311,21 +276,21 @@ namespace DigitalniPotpisUI
                     MessageBox.Show(exception.GetBaseException().Message);
                     ClearRichBox();
                 }
-                
+
             }
         }
 
         private void PotpišiToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
             ClearRichBox();
             try
             {
-                hashFunction.GetData(plainText.Read());
-                string hashValue = hashFunction.ReturnHash();
+                hashFunction.GetData(plainText.ReadAll());
+                hashValue = hashFunction.ReturnHash();
                 hash.Write(hashValue);
                 uiShowData.Text = "Sažetak: " + hashValue + AddNewLine();
-                string signatureValue = rsaProcessor.SignHash(hashValue, "SHA256");
+                signatureValue = rsaProcessor.SignHash(hashValue, "SHA256");
                 uiShowData.Text += "Digitalni potpis: " + signatureValue;
                 signature.Write(signatureValue);
 
@@ -341,7 +306,16 @@ namespace DigitalniPotpisUI
             ClearRichBox();
             try
             {
-
+                uiShowData.Text = "Sažetak: " + hash.ReadAll() + AddNewLine();
+                uiShowData.Text += "Digitalni potpis: " + signature.ReadAll();
+                if (rsaProcessor.VerifyHash(signature.ReadAll(), "SHA256", hash.ReadAll()))
+                {
+                    MessageBox.Show("Digitalni potpis je valjan!");
+                }
+                else
+                {
+                    MessageBox.Show("Digitalni potpis nije valjan!");
+                }
             }
             catch (Exception ex)
             {
@@ -358,11 +332,38 @@ namespace DigitalniPotpisUI
         private void ClearRichBox()
         {
             uiShowData.Clear();
+            uiSaveChanges.Visible = false;
         }
 
         private string AddNewLine()
         {
             return Environment.NewLine + Environment.NewLine;
         }
+
+        private void JasniTekstToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ClearRichBox();
+            try
+            {
+                uiSaveChanges.Visible = true;
+                uiShowData.ReadOnly = false;
+                uiShowData.Text = plainText.ReadAll();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void UiSaveChanges_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Spremi promjene", "Spremi promjene?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                plainText.Write(uiShowData.Text);
+                uiSaveChanges.Visible = false;
+                uiShowData.ReadOnly = true;
+            }
+        }
+
     }
 }

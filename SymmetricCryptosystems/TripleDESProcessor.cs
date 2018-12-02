@@ -22,12 +22,11 @@ namespace SymmetricCryptosystems
             keyRandom.NextBytes(forKey);
             IVRandom.NextBytes(forIV);
             SetIVAndKey();
-
         }
         public string Encrypt(string plainText)
         {
             SetIVAndKey();
-            byte[] plainTextByteArray = Convert.FromBase64String(plainText);
+            byte[] plainTextByteArray = UTF8Encoding.UTF8.GetBytes(plainText);
             _cryptoTransform = _tdes.CreateEncryptor();
             byte[] resultArray = _cryptoTransform.TransformFinalBlock(plainTextByteArray, 0, plainTextByteArray.Length);
             string output = Convert.ToBase64String(resultArray);
@@ -51,8 +50,7 @@ namespace SymmetricCryptosystems
 
                 throw new CryptographicException("Dogodila se greška!");
             }
-            
-            string output = Convert.ToBase64String(resultArray);
+            string output = UTF8Encoding.UTF8.GetString(resultArray);
             _tdes.Clear();
             _cryptoTransform.Dispose();
             return output;
@@ -68,6 +66,5 @@ namespace SymmetricCryptosystems
             _tdes.Key = forKey;
             _tdes.IV = forIV;
         }
-
     }
 }

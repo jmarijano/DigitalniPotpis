@@ -16,31 +16,6 @@ namespace FileProcessors
         {
             _fileName = fileName + ".txt";
         }
-        public void Close()
-        {
-            _file.Close();
-        }
-
-        public string Read()
-        {
-            if (!IsCreated())
-            {
-                throw new FileNotFoundException($"Datoteka {_fileName} nije pronađena!");
-            }
-
-
-            if (new FileInfo(GetPath()).Length == 0)
-            {
-                throw new ArgumentException($"Datoteka {_fileName} je prazna!");
-            }
-            string lines = null;
-            using (_file)
-            {
-                lines = File.ReadAllLines(GetPath()).First().ToString();
-            }
-
-            return lines;
-        }
 
         public bool Write(string lines)
         {
@@ -54,8 +29,6 @@ namespace FileProcessors
             return true;
         }
 
-
-
         public string GetPath()
         {
             return AppDomain.CurrentDomain.BaseDirectory + _fileName;
@@ -67,7 +40,7 @@ namespace FileProcessors
             {
                 File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + _fileName, String.Empty);
             }
-            
+
             return true;
         }
 
@@ -77,9 +50,8 @@ namespace FileProcessors
             {
 
             }
-
-
         }
+
         public bool Exists()
         {
             if (IsCreated())
@@ -88,6 +60,7 @@ namespace FileProcessors
             }
             return false;
         }
+
         public bool IsCreated()
         {
             if (File.Exists(GetPath()))
@@ -103,7 +76,7 @@ namespace FileProcessors
             string output = "";
             using (_file)
             {
-               allLines= File.ReadAllLines(GetPath());
+                allLines = File.ReadAllLines(GetPath());
             }
             foreach (var line in allLines)
             {
@@ -112,6 +85,7 @@ namespace FileProcessors
             return output;
         }
     }
+
     public enum FileName
     {
         dekriptirani_tekst,

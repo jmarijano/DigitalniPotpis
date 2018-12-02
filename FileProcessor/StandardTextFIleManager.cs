@@ -16,7 +16,7 @@ namespace FileProcessors
                 }
             }
             return true;
-            
+
         }
 
         public void CreateTextFiles(List<IFileProcessor> fileProcessors)

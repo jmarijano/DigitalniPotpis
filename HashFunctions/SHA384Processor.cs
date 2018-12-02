@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HashFunctions
 {
-    public class SHA384Processor:IHashFunction
+    public class SHA384Processor : IHashFunction
     {
         private string _hashedText;
 

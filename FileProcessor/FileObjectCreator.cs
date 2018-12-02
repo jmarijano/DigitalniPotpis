@@ -22,28 +22,6 @@ namespace FileProcessors
             return output;
         }
 
-        public static List<IFileProcessor> CreateFilesForSymmetricEncryption()
-        {
-            List<IFileProcessor> output = new List<IFileProcessor>
-            {
-                new TextFileProcessor(FileName.tajni_kljuc.ToString()),
-                new TextFileProcessor(FileName.dekriptirani_tekst.ToString()),
-                new TextFileProcessor(FileName.kriptirani_tekst_simetricno.ToString()),
-            };
-            return output;
-        }
-
-        public static List<IFileProcessor> CreateFilesForAsymmetricEncryption()
-        {
-            List<IFileProcessor> output = new List<IFileProcessor>
-            {
-                new TextFileProcessor(FileName.tajni_kljuc.ToString()),
-                new TextFileProcessor(FileName.dekriptirani_tekst.ToString()),
-                new TextFileProcessor(FileName.kriptirani_tekst_simetricno.ToString()),
-            };
-            return output;
-        }
-
         public static IFileProcessor CreatePrivatniKljuc()
         {
             return new TextFileProcessor(FileName.privatni_kljuc.ToString());
