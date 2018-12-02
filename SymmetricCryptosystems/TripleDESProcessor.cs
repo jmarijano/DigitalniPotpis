@@ -41,7 +41,17 @@ namespace SymmetricCryptosystems
             SetIVAndKey();
             byte[] cypherTextByteArray = Convert.FromBase64String(cypherText);
             _cryptoTransform = _tdes.CreateDecryptor();
-            byte[] resultArray = _cryptoTransform.TransformFinalBlock(cypherTextByteArray, 0, cypherTextByteArray.Length);
+            byte[] resultArray;
+            try
+            {
+                resultArray = _cryptoTransform.TransformFinalBlock(cypherTextByteArray, 0, cypherTextByteArray.Length);
+            }
+            catch (CryptographicException)
+            {
+
+                throw new CryptographicException("Dogodila se greška!");
+            }
+            
             string output = Convert.ToBase64String(resultArray);
             _tdes.Clear();
             _cryptoTransform.Dispose();

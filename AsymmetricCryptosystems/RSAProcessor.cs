@@ -56,7 +56,17 @@ namespace AsymmetricCryptosystems
         public string Decrypt(string cypherText)
         {
             var bytesCypherText = Convert.FromBase64String(cypherText);
-            var bytesPlainText = _csp.Decrypt(bytesCypherText, false);
+            byte[] bytesPlainText;
+            try
+            {
+                bytesPlainText = _csp.Decrypt(bytesCypherText, false);
+            }
+            catch (Exception)
+            {
+
+                throw new CryptographicException("Dogodila se pogreška!");
+            }
+            
 
             string output = System.Text.Encoding.Unicode.GetString(bytesPlainText);
             return output;

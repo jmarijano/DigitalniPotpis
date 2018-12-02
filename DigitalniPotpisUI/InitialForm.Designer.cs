@@ -68,7 +68,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.menuStrip1.Size = new System.Drawing.Size(992, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(790, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -107,14 +107,14 @@
             // simetričnoToolStripMenuItem
             // 
             this.simetričnoToolStripMenuItem.Name = "simetričnoToolStripMenuItem";
-            this.simetričnoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.simetričnoToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.simetričnoToolStripMenuItem.Text = "Simetrično";
             this.simetričnoToolStripMenuItem.Click += new System.EventHandler(this.SimetričnoToolStripMenuItem_Click);
             // 
             // asimetričnoToolStripMenuItem
             // 
             this.asimetričnoToolStripMenuItem.Name = "asimetričnoToolStripMenuItem";
-            this.asimetričnoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.asimetričnoToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.asimetričnoToolStripMenuItem.Text = "Asimetrično";
             this.asimetričnoToolStripMenuItem.Click += new System.EventHandler(this.AsimetričnoToolStripMenuItem_Click);
             // 
@@ -154,14 +154,14 @@
             // potpišiToolStripMenuItem
             // 
             this.potpišiToolStripMenuItem.Name = "potpišiToolStripMenuItem";
-            this.potpišiToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.potpišiToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.potpišiToolStripMenuItem.Text = "Potpiši";
             this.potpišiToolStripMenuItem.Click += new System.EventHandler(this.PotpišiToolStripMenuItem_Click);
             // 
             // provjeriToolStripMenuItem
             // 
             this.provjeriToolStripMenuItem.Name = "provjeriToolStripMenuItem";
-            this.provjeriToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.provjeriToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.provjeriToolStripMenuItem.Text = "Provjeri";
             this.provjeriToolStripMenuItem.Click += new System.EventHandler(this.ProvjeriToolStripMenuItem_Click);
             // 
@@ -254,7 +254,7 @@
             // 
             // uiShowData
             // 
-            this.uiShowData.Location = new System.Drawing.Point(286, 74);
+            this.uiShowData.Location = new System.Drawing.Point(108, 35);
             this.uiShowData.Name = "uiShowData";
             this.uiShowData.ReadOnly = true;
             this.uiShowData.Size = new System.Drawing.Size(671, 499);
@@ -264,7 +264,7 @@
             // uiShowDataLabel
             // 
             this.uiShowDataLabel.AutoSize = true;
-            this.uiShowDataLabel.Location = new System.Drawing.Point(190, 77);
+            this.uiShowDataLabel.Location = new System.Drawing.Point(12, 38);
             this.uiShowDataLabel.Name = "uiShowDataLabel";
             this.uiShowDataLabel.Size = new System.Drawing.Size(90, 13);
             this.uiShowDataLabel.TabIndex = 3;
@@ -275,11 +275,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.ClientSize = new System.Drawing.Size(992, 615);
+            this.ClientSize = new System.Drawing.Size(790, 575);
             this.Controls.Add(this.uiShowDataLabel);
             this.Controls.Add(this.uiShowData);
             this.Controls.Add(this.menuStrip1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "InitialForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
